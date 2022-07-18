@@ -84,7 +84,7 @@ require (
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.1
 	github.com/tj/assert v0.0.0-20171129193455-018094318fb0
-	github.com/vmware-tanzu/carvel-kapp-controller v0.35.0
+	github.com/vmware-tanzu/carvel-kapp-controller v0.38.4
 	github.com/vmware-tanzu/carvel-kapp-controller/cli v0.0.0-20220617205641-1d376ccc7312
 	github.com/vmware-tanzu/carvel-secretgen-controller v0.5.0
 	github.com/vmware-tanzu/carvel-vendir v0.26.0
