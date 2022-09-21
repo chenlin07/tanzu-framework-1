@@ -212,10 +212,12 @@ func generateRepoBundle(projectRootDir string) error {
 	yttCmd.Stdout = outfile
 	yttCmd.Stderr = &errBytes
 
+	fmt.Printf("cmd 1111111", yttCmd)
 	yttCmdStdin, err := yttCmd.StdinPipe()
 	if err != nil {
 		return fmt.Errorf("couldn't run ytt command to generate imgpkg lock output file for repo bundle: %w", err)
 	}
+	fmt.Printf("cmd 2222222", imagesLockTemplate)
 	_, err = yttCmdStdin.Write([]byte(imagesLockTemplate))
 	if err != nil {
 		return fmt.Errorf("couldn't run ytt command to generate imgpkg lock output file for repo bundle: %w", err)

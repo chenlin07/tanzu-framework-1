@@ -2,8 +2,8 @@ apiVersion: kbld.k14s.io/v1alpha1
 kind: Config
 overrides:
 - image: tkr-resolver-cluster-webhook:latest
-  newImage: ""
+  newImage: "wcp-gc-docker-local.artifactory.eng.vmware.com/tkg-composite-package/tkr-resolver-cluster-webhook:latest"
 - image: tkr-conversion-webhook:latest
-  newImage: ""
+  newImage: "wcp-gc-docker-local.artifactory.eng.vmware.com/tkg-composite-package/tkr-conversion-webhook:latest"
 - image: tkr-status-controller:latest
-  newImage: ""
+  newImage: "wcp-gc-docker-local.artifactory.eng.vmware.com/tkg-composite-package/tkr-status-controller:latest"

@@ -2,4 +2,4 @@ apiVersion: kbld.k14s.io/v1alpha1
 kind: Config
 overrides:
 - image: object-propagation-controller:latest
-  newImage: ""
+  newImage: "wcp-gc-docker-local.artifactory.eng.vmware.com/tkg-composite-package/object-propagation-controller:latest"

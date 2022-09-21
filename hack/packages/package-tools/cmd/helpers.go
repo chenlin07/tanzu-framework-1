@@ -24,7 +24,7 @@ func readPackageValues(projectRootDir string) (PackageValues, error) {
 	if err := yaml.Unmarshal(packageValuesData, &packageValues); err != nil {
 		return PackageValues{}, fmt.Errorf("unmarshalling package values data: %w", err)
 	}
-
+        fmt.Printf("Generating %q packageValues...\n", packageValues)
 	return packageValues, nil
 }
 
@@ -34,11 +34,12 @@ func getPackageFromPackageValues(projectRootDir, packageName string) ([]Package,
 	if err != nil {
 		return []Package{}, err
 	}
-
+       fmt.Printf("Generating %q packageName 111111111...\n", packageName)
 	matchingPackages := []Package{}
 	for i := range packageValues.Repositories {
 		packages := packageValues.Repositories[i].Packages
 		for i := range packages {
+			fmt.Printf("Generating %q packages[i].Name22222222222...\n", packages[i].Name)
 			if packages[i].Name == packageName {
 				if packages[i].Version == version {
 					return []Package{packages[i]}, nil

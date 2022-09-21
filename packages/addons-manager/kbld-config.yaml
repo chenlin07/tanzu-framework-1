@@ -2,4 +2,4 @@ apiVersion: kbld.k14s.io/v1alpha1
 kind: Config
 overrides:
 - image: addons-controller:latest
-  newImage: ""
+  newImage: "wcp-gc-docker-local.artifactory.eng.vmware.com/tkg-composite-package/addons-controller:v0.17.0-dev-810-g2bf84e0b-dirty"

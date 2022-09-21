@@ -61,7 +61,7 @@ func runPackageBundleGenerate(cmd *cobra.Command, args []string) error {
 		}
 	} else {
 		fmt.Printf("Generating %q package bundle...\n", packageName)
-
+                fmt.Printf("Generating %q projectRootDir...\n", projectRootDir)
 		pkgs, err := getPackageFromPackageValues(projectRootDir, packageName)
 		if err != nil {
 			return err
