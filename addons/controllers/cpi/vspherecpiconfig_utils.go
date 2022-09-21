@@ -17,7 +17,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	capvv1beta1 "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
 	capvvmwarev1beta1 "sigs.k8s.io/cluster-api-provider-vsphere/apis/vmware/v1beta1"
 	clusterapiv1beta1 "sigs.k8s.io/cluster-api/api/v1beta1"
 
@@ -36,15 +35,15 @@ func (r *VSphereCPIConfigReconciler) mapCPIConfigToDataValuesNonParavirtual( // 
 	c := cpiConfig.Spec.VSphereCPI.NonParavirtualConfig
 	d.Mode = VsphereCPINonParavirtualMode
 
-	// get the vsphere cluster object
-	vsphereCluster, err := r.getVSphereCluster(ctx, cluster)
+	// get the vcenter values
+	vcenterValues, err := util.ParseVCenterValues(cluster)
 	if err != nil {
 		return nil, err
 	}
 
 	// derive the thumbprint, server from the vsphere cluster object
-	d.TLSThumbprint = vsphereCluster.Spec.Thumbprint
-	d.Server = vsphereCluster.Spec.Server
+	d.TLSThumbprint = vcenterValues.TlsThumbprint
+	d.Server = vcenterValues.Server
 
 	// derive vSphere username and password from the <cluster name> secret
 	clusterSecret, err := r.getSecret(ctx, cluster.Namespace, cluster.Name)
@@ -56,20 +55,8 @@ func (r *VSphereCPIConfigReconciler) mapCPIConfigToDataValuesNonParavirtual( // 
 		return nil, err
 	}
 
-	// get the control plane machine template
-	cpMachineTemplate := &capvv1beta1.VSphereMachineTemplate{}
-	if err := r.Client.Get(ctx, types.NamespacedName{
-		Namespace: cluster.Namespace,
-		Name:      controlPlaneName(cluster.Name),
-	}, cpMachineTemplate); err != nil {
-		if apierrors.IsNotFound(err) {
-			return nil, errors.Errorf("VSphereMachineTemplate %s/%s not found", cluster.Namespace, controlPlaneName(cluster.Name))
-		}
-		return nil, errors.Errorf("VSphereMachineTemplate %s/%s could not be fetched, error %v", cluster.Namespace, controlPlaneName(cluster.Name), err)
-	}
-
 	// derive data center information from control plane machine template, if not provided
-	d.Datacenter = cpMachineTemplate.Spec.Template.Spec.Datacenter
+	d.Datacenter = vcenterValues.Datacenter
 
 	// derive ClusterCidr from cluster.spec.clusterNetwork
 	if cluster.Spec.ClusterNetwork != nil && cluster.Spec.ClusterNetwork.Pods != nil && len(cluster.Spec.ClusterNetwork.Pods.CIDRBlocks) > 0 {
@@ -84,26 +71,8 @@ func (r *VSphereCPIConfigReconciler) mapCPIConfigToDataValuesNonParavirtual( // 
 		d.NoProxy = cluster.Annotations[pkgtypes.NoProxyConfigAnnotation]
 	}
 
-	// derive nsxt related configs from cluster variable
-	d.Nsxt.PodRoutingEnabled = r.tryParseClusterVariableBool(cluster, NsxtPodRoutingEnabledVarName)
-	d.Nsxt.Routes.RouterPath = r.tryParseClusterVariableString(cluster, NsxtRouterPathVarName)
-	d.Nsxt.Routes.ClusterCidr = r.tryParseClusterVariableString(cluster, ClusterCIDRVarName)
-	d.Nsxt.Username = r.tryParseClusterVariableString(cluster, NsxtUsernameVarName)
-	d.Nsxt.Password = r.tryParseClusterVariableString(cluster, NsxtPasswordVarName)
-	d.Nsxt.Host = r.tryParseClusterVariableString(cluster, NsxtManagerHostVarName)
-	d.Nsxt.Insecure = r.tryParseClusterVariableBool(cluster, NsxtAllowUnverifiedSSLVarName)
-	d.Nsxt.RemoteAuthEnabled = r.tryParseClusterVariableBool(cluster, NsxtRemoteAuthVarName)
-	d.Nsxt.VmcAccessToken = r.tryParseClusterVariableString(cluster, NsxtVmcAccessTokenVarName)
-	d.Nsxt.VmcAuthHost = r.tryParseClusterVariableString(cluster, NsxtVmcAuthHostVarName)
-	d.Nsxt.ClientCertKeyData = r.tryParseClusterVariableString(cluster, NsxtClientCertKeyDataVarName)
-	d.Nsxt.ClientCertData = r.tryParseClusterVariableString(cluster, NsxtClientCertDataVarName)
-	d.Nsxt.RootCAData = r.tryParseClusterVariableString(cluster, NsxtRootCADataB64VarName)
-	d.Nsxt.SecretName = r.tryParseClusterVariableString(cluster, NsxtSecretNameVarName)
-	d.Nsxt.SecretNamespace = r.tryParseClusterVariableString(cluster, NsxtSecretNamespaceVarName)
-
 	// allow API user to override the derived values if he/she specified fields in the VSphereCPIConfig
 	d.TLSThumbprint = tryParseString(d.TLSThumbprint, c.TLSThumbprint)
-	d.Server = tryParseString(d.Server, c.VCenterAPIEndpoint)
 	d.Server = tryParseString(d.Server, c.VCenterAPIEndpoint)
 	d.Datacenter = tryParseString(d.Datacenter, c.Datacenter)
 
@@ -375,22 +344,6 @@ func (r *VSphereCPIConfigReconciler) getOwnerCluster(ctx context.Context, cpiCon
 	}
 	r.Log.Info(fmt.Sprintf("Cluster resource '%s/%s' is successfully found", cpiConfig.Namespace, clusterName))
 	return cluster, nil
-}
-
-// TODO: make these functions accessible to other controllers (for example csi) https://github.com/vmware-tanzu/tanzu-framework/issues/2086
-// getVSphereCluster gets the VSphereCluster CR for the cluster object
-func (r *VSphereCPIConfigReconciler) getVSphereCluster(ctx context.Context, cluster *clusterapiv1beta1.Cluster) (*capvv1beta1.VSphereCluster, error) {
-	vsphereCluster := &capvv1beta1.VSphereCluster{}
-	if err := r.Client.Get(ctx, types.NamespacedName{
-		Namespace: cluster.Namespace,
-		Name:      cluster.Name,
-	}, vsphereCluster); err != nil {
-		if apierrors.IsNotFound(err) {
-			return nil, errors.Errorf("VSphereCluster %s/%s not found", cluster.Namespace, cluster.Name)
-		}
-		return nil, errors.Errorf("VSphereCluster %s/%s could not be fetched, error %v", cluster.Namespace, cluster.Name, err)
-	}
-	return vsphereCluster, nil
 }
 
 // getSecret gets the secret object given its name and namespace
