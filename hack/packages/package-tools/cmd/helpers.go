@@ -24,7 +24,7 @@ func readPackageValues(projectRootDir string) (PackageValues, error) {
 	if err := yaml.Unmarshal(packageValuesData, &packageValues); err != nil {
 		return PackageValues{}, fmt.Errorf("unmarshalling package values data: %w", err)
 	}
-
+        fmt.Printf("Generating %q packageValues...\n", packageValues)
 	return packageValues, nil
 }
 
