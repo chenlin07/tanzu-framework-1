@@ -143,12 +143,14 @@ func generatePackageBundlesSha256(projectRootDir, localRegistry string) error {
 		if err := yaml.Unmarshal(lockOutputData, &bundleLock); err != nil {
 			return fmt.Errorf("error while unmarshaling: %w", err)
 		}
-
+                fmt.Println("lockOutputData ", lockOutputData)
+		fmt.Println("img pkg command is ", imgpkgCmd)
 		packageValues.Repositories[packageRepository].Packages[i].Version = formattedVer.noV
 		packageValues.Repositories[packageRepository].Packages[i].Sha256 = utils.AfterString(
 			bundleLock.Bundle.Image,
 			localRegistry+"/"+pkg.Name+"@sha256:",
 		)
+		fmt.Println("Packages sha256 ", pkg.Name, packageValues.Repositories[packageRepository].Packages[i].Sha256)
 		packageValues.Repositories[packageRepository].Packages[i].PackageSubVersion = formattedVer.subVersion
 		yamlData, err := yaml.Marshal(&packageValues)
 		if err != nil {
@@ -217,7 +219,7 @@ func generateRepoBundle(projectRootDir string) error {
 	if err != nil {
 		return fmt.Errorf("couldn't run ytt command to generate imgpkg lock output file for repo bundle: %w", err)
 	}
-	fmt.Printf("cmd 2222222", imagesLockTemplate)
+	fmt.Printf("cmd 222222ck/packages/package-tools/cmd/repo-bundle-generate.go2", imagesLockTemplate)
 	_, err = yttCmdStdin.Write([]byte(imagesLockTemplate))
 	if err != nil {
 		return fmt.Errorf("couldn't run ytt command to generate imgpkg lock output file for repo bundle: %w", err)

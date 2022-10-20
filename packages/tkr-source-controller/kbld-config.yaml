@@ -1,5 +1,5 @@
 apiVersion: kbld.k14s.io/v1alpha1
 kind: Config
 overrides:
-  - image: tkr-source-controller:latest
-    newImage: "wcp-gc-docker-local.artifactory.eng.vmware.com/tkg-composite-package/tkr-source-controller:latest"
+- image: tkr-source-controller:latest
+  newImage: wcp-gc-docker-local.artifactory.eng.vmware.com/ako-dev/tkg-composite-package/tkr-source-controller:latest

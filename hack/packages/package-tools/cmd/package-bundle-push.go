@@ -90,7 +90,7 @@ func runPackageBundlePush(cmd *cobra.Command, args []string) error {
 				"push", "-b", registry+"/"+pkg.Name+":"+imagePackageVersion,
 				"--file", packageBundlePath,
 			) // #nosec G204
-
+              		fmt.Println("imgpkgCmd ", imgpkgCmd)
 			var errBytes bytes.Buffer
 			imgpkgCmd.Stderr = &errBytes
 			if err := imgpkgCmd.Run(); err != nil {
@@ -98,9 +98,9 @@ func runPackageBundlePush(cmd *cobra.Command, args []string) error {
 			}
 
 			// remove the untared package bundle
-			if err := os.RemoveAll(packageBundlePath); err != nil {
-				return err
-			}
+			//if err := os.RemoveAll(packageBundlePath); err != nil {
+			//	return err
+			//}
 		}
 	}
 	return nil

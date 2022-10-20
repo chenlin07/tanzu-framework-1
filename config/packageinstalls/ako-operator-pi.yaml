@@ -1,5 +1,6 @@
-#@data/values
-#@overlay/match-child-defaults missing_ok=True
+#@ load("@ytt:yaml", "yaml")
+#@ load("@ytt:data", "data")
+#@ load("helpers.star", "ValuesFormatStr")
 ---
 apiVersion: packaging.carvel.dev/v1alpha1
 kind: PackageInstall
@@ -28,4 +29,4 @@ metadata:
     kapp.k14s.io/change-rule.1: "delete before deleting ako-operator-packageinstall/serviceaccount"
 type: Opaque
 data:
-  values.yaml:  #@ yaml.encode(data.values.akoOperatorPackage)
+  values.yaml: #@ ValuesFormatStr.format(yaml.encode(data.values.akoOperatorPackage))

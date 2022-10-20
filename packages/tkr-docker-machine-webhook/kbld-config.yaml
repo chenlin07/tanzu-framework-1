@@ -2,4 +2,4 @@ apiVersion: kbld.k14s.io/v1alpha1
 kind: Config
 overrides:
 - image: tkr-infra-machine-webhook:latest
-  newImage: "wcp-gc-docker-local.artifactory.eng.vmware.com/tkg-composite-package/tkr-infra-machine-webhook:latest"
+  newImage: wcp-gc-docker-local.artifactory.eng.vmware.com/ako-dev/tkg-composite-package/tkr-infra-machine-webhook:latest

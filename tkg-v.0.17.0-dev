@@ -1,0 +1,15 @@
+.imgpkg/images.yml
+config/namespaces/featuregates-package-resources-namespace.yaml
+config/namespaces/tkr-service-package-resources-namespace.yaml
+config/packageinstalls/ako-operator-pi.yaml
+config/packageinstalls/ako-operator-service-account.yaml
+config/packageinstalls/core-management-plugins-pi.yaml
+config/packageinstalls/core-management-plugins-service-account.yaml
+config/packageinstalls/framework-pi.yaml
+config/packageinstalls/framework-service-account.yaml
+config/packageinstalls/helpers.star
+config/packageinstalls/tkg-clusterclass-pi.yaml
+config/packageinstalls/tkg-clusterclass-service-account.yaml
+config/packageinstalls/tkr-source-controller-pi.yaml
+config/packageinstalls/tkr-source-controller-service-account.yaml
+config/values.yaml

@@ -256,6 +256,7 @@ func generatePackageBundles(projectRootDir, toolsBinDir string) error {
 				bundleLock.Bundle.Image,
 				constants.LocalRegistryURL+"/"+pkgVals.Repositories[repo].Packages[i].Name+"@sha256:",
 			)
+			fmt.Println("Packages sha256 ", pkgVals.Repositories[repo].Packages[i].Name, pkgVals.Repositories[repo].Packages[i].Sha256)
 			yamlData, err := yaml.Marshal(&pkgVals)
 			if err != nil {
 				return fmt.Errorf("error while marshaling: %w", err)

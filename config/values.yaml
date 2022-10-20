@@ -1,0 +1,130 @@
+#@data/values
+---
+
+#! User configurable values for tkg.
+
+metadata:
+  infraProvider: ""
+
+configvalues:
+
+frameworkPackage:
+  namespaceForPackageInstallation: tkg-system
+  versionConstraints:
+  featureGatesPackageValues:
+    namespace: tkg-system
+    createNamespace: false
+    versionConstraints:
+    deployment:
+      hostNetwork: true
+      nodeSelector: null
+      tolerations: []
+      webhookServerPort: 9443
+  tkrServicePackageValues:
+    namespace: tkg-system
+    createNamespace: false
+    versionConstraints:
+    deployment:
+      hostNetwork: false
+      nodeSelector: null
+      tolerations: []
+      #! If hostNetwork is set to true the below two ports should be different
+      tkrConversionWebhookServerPort: 9443
+      tkrResolverWebhookServerPort: 9443
+  addonsManagerPackageValues:
+    versionConstraints:
+    tanzuAddonsManager:
+      namespace: tkg-system
+      createNamespace: false
+      deployment:
+        replicas: 2
+        leaderElection: false
+        hostNetwork: true
+        priorityClassName: system-cluster-critical
+        nodeSelector: null
+        tolerations: []
+        webhookServerPort: 9865
+        healthzPort: 18316
+        clusterDeleteTimeout: "10m"
+        metricsBindAddress: "localhost:18317"
+      featureGates:
+        clusterBootstrapController: false
+        packageInstallStatus: false
+  clipluginsPackageValues:
+    namespace: tkg-system
+    versionConstraints:
+  tanzuAuthPackageValues:
+    namespace: tanzu-auth
+    versionConstraints:
+    controller:
+      image: tanzu-auth-controller-manager:latest
+
+clusterclassPackage:
+  namespaceForPackageInstallation: tkg-system
+  versionConstraints:
+  clusterclassInfraPackageValues:
+    namespace: tkg-system
+    createNamespace: false
+    versionConstraints:
+
+tkrSourceControllerPackage:
+  namespaceForPackageInstallation: tkg-system
+  versionConstraints:
+  tkrSourceControllerPackageValues:
+    namespace: tkg-system
+    bomImagePath:
+    bomMetadataImagePath:
+    tkrRepoImagePath:
+    defaultCompatibleTKR:
+    skipVerifyRegistryCert: false
+    initialDiscoverFrequency: 60
+    continuousDiscoverFrequency: 600
+    deployment:
+      hostNetwork: false
+      nodeSelector: null
+      tolerations: []
+      httpProxy:
+      httpsProxy:
+      noProxy:
+
+coreManagementPluginsPackage:
+  namespaceForPackageInstallation: tkg-system
+  versionConstraints:
+  coreManagementPluginsPackageValues:
+    deployCLIPluginCRD: false
+
+akoOperatorPackage:
+  akoOperator:
+    avi_enable: true
+    namespace: tkg-system-networking
+    cluster_name: ""
+    config:
+      avi_admin_credential_name: avi-controller-credentials
+      avi_ca_name: avi-controller-ca
+      avi_controller: ""
+      avi_controller_version: ""
+      avi_username: ""
+      avi_password: ""
+      avi_ca_data_b64: ""
+      avi_cloud_name: "Default-Cloud"
+      avi_service_engine_group: "Default-Group"
+      avi_management_cluster_service_engine_group: null
+      avi_data_network: ""
+      avi_data_network_cidr: ""
+      avi_control_plane_network: ""
+      avi_control_plane_network_cidr: ""
+      avi_management_cluster_vip_network_name: ""
+      avi_management_cluster_vip_network_cidr: ""
+      avi_management_cluster_control_plane_vip_network_name: ""
+      avi_management_cluster_control_plane_vip_network_cidr: ""
+      avi_labels: '""'
+      avi_cni_plugin: ""
+      avi_control_plane_ha_provider: false
+      avi_control_plane_endpoint_port: 6443
+      avi_nsxt_t1_lr: null
+      avi_disable_ingress_class: true
+      avi_disable_static_route_sync: false
+      avi_ingress_default_ingress_controller: false
+      avi_ingress_shard_vs_size: ""
+      avi_ingress_service_type: ""
+      avi_ingress_node_network_list: '""'
