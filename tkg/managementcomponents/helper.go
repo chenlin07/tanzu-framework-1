@@ -93,6 +93,29 @@ func GetTKGPackageConfigValuesFileFromUserConfig(managementPackageVersion string
 		CoreManagementPluginsPackage: CoreManagementPluginsPackage{
 			VersionConstraints: managementPackageVersion,
 		},
+		AkoOperatorPackage: AkoOperatorPackage{
+			AkoOperatorPackageValues: AkoOperatorPackageValues{
+				AviEnable: fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviEnable]),
+				AviOperatorConfig: AviOperatorConfig{
+					AviControllerAddress:                           fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviControllerAddress]),
+					AviControllerVersion:                           fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviControllerVersion]),
+					AviControllerUsername:                          fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviControllerUsername]),
+					AviControllerPassword:                          fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviControllerPassword]),
+					AviControllerCA:                                fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviControllerCA]),
+					AviCloudName:                                   fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviCloudName]),
+					AviServiceEngineGroup:                          fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviServiceEngineGroup]),
+					AviManagementClusterServiceEngineGroup:         fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviManagementClusterServiceEngineGroup]),
+					AviDataPlaneNetworkName:                        fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviDataPlaneNetworkName]),
+					AviDataPlaneNetworkCIDR:                        fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviDataPlaneNetworkCIDR]),
+					AviControlPlaneNetworkName:                     fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviControlPlaneNetworkName]),
+					AviControlPlaneNetworkCIDR:                     fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviControlPlaneNetworkCIDR]),
+					AviManagementClusterDataPlaneNetworkName:       fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviManagementClusterDataPlaneNetworkName]),
+					AviManagementClusterDataPlaneNetworkCIDR:       fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviManagementClusterDataPlaneNetworkCIDR]),
+					AviManagementClusterControlPlaneVipNetworkName: fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviManagementClusterControlPlaneVipNetworkName]),
+					AviManagementClusterControlPlaneVipNetworkCIDR: fmt.Sprint(userProviderConfigValues[constants.ConfigVariableAviManagementClusterControlPlaneVipNetworkCIDR]),
+				},
+			},
+		},
 	}
 
 	configBytes, err := yaml.Marshal(tkgPackageConfig)
